@@ -21,20 +21,28 @@ $(document).ready(function(){
     const canvas = document.querySelector("#canvas");
     const ctx = canvas.getContext("2d");
 
-    const cell_size = 32;
-    const line_width = 0.75;
+    canvas.height = 512;
+    canvas.width = 512;
 
-    const size_x = 50;
-    const size_y = 24;
+    const size_x = 16;
+    const size_y = 16;
 
-    canvas.height = size_y * cell_size;
-    canvas.width = size_x * cell_size;
+    const cell_width = 32;
+    const cell_height = 32;
 
-    snake = [[0, 0]];
-    var head_index = 0;
+    const line_width = 24;
 
-    var apple_x = 2;
-    var apple_y = 2;
+    snake = [];
+    for (var x = 0; x < size_x; x++){
+        for (var y = 0; y < size_y; y++){
+            snake[x + y * size_y] = [x, y]
+        }
+    }
+    var head_index = 3;
+    var tail_index = 6;
+
+    var apple_x = 7;
+    var apple_y = 5;
 
     alive = true;
 
@@ -62,25 +70,17 @@ $(document).ready(function(){
         }
 
         if (x == apple_x && y == apple_y){
-            snake.splice(head_index, 0, [x, y]);
-            var valid_positions = size_x * size_y - snake.length;
-            if (valid_positions == 0){apple_x = NaN; apple_y = NaN}
-            else {
-                var index = Math.floor(Math.random()*valid_positions)
-                var i = -1;
-                for (var j = 0; j < size_x * size_y; j++){
-                    var valid_position = true;
-                    for (var segment of snake){
-                        if (segment[0] + size_x * segment[1] == j) valid_position = false;
-                    }
-                    if (valid_position) i++;
-                    if (i == index){
-                        apple_x = j % size_x;
-                        apple_y = Math.floor(j / size_x);
-                        break;
-                    }
+            var invalid_apple = true;  // update apple
+            while(invalid_apple){
+                apple_x = Math.floor(Math.random() * size_x);
+                apple_y = Math.floor(Math.random() * size_y);
+                var invalid_apple = false;
+                for(segment of snake){
+                    if (segment[0] == apple_x && segment[1] == apple_y) invalid_apple = true;
                 }
             }
+
+            snake.splice(head_index, 0, [x, y]);
         } else {
             snake[head_index]=[x, y];
         }
@@ -104,12 +104,13 @@ $(document).ready(function(){
 
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        ctx.lineWidth = cell_size * line_width;
+        ctx.lineWidth = line_width;
         ctx.beginPath();
-        ctx.moveTo((snake[head_index][0] + 0.5) * cell_size, (snake[head_index][1] + 0.5) * cell_size);
-        for (var i = snake.length; i > 0; i--){
-            var index = (i + head_index + snake.length) % snake.length;
-            ctx.lineTo((snake[index][0] + 0.5) * cell_size, (snake[index][1] + 0.5) * cell_size);
+        ctx.moveTo((snake[tail_index][0] + 0.5) * cell_width, (snake[tail_index][1] + 0.5) * cell_height);
+        for (
+            var i = tail_index;i <= head_index + 1;i++){
+            if (i == size_x * size_y) i = 0;
+            ctx.lineTo((snake[i][0] + 0.5) * cell_width, (snake[i][1] + 0.5) * cell_height);
         }
 
         ctx.stroke();
@@ -119,22 +120,22 @@ $(document).ready(function(){
 
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc((apple_x + 0.5) * cell_size, (apple_y + 0.5) * cell_size, cell_size * line_width/2, 0, 2 * Math.PI);
+        ctx.arc((apple_x + 0.5) * cell_width, (apple_y + 0.5) * cell_height, line_width/2, 0, 2 * Math.PI);
         ctx.fill();
         ctx.closePath();
 
 
 
-        if (alive) setTimeout(()=>requestAnimationFrame(Update), 20);
+        if (alive) setTimeout(()=>requestAnimationFrame(Update), 3);
 
         // AI
 
         var tile = (x + y) % 2;
         if (dir == 1 || dir == 3) tile = 1 - tile;
 
-        if (tile == 0) dir_0 = (dir + 3)%4;  //turn direction
+        if (tile == 0) dir_0 = (dir + 3)%4;
         else dir_0 = (dir + 5)%4;
-        dir_1 = dir;                         //straight direction
+        dir_1 = dir;
 
         // check dir_0
 
@@ -164,14 +165,9 @@ $(document).ready(function(){
             ) check_0 = 2;
 
 
-
-        for (var i = 0; i < snake.length; i++){ // check if snake would be dead (overrides apple)
-            if (i != head_index && i != (head_index + 1) % snake.length){
-                var segment = snake[i];
-                if (segment[0] == x && segment[1] == y) check_0 = 0;
-            }
+        for (var segment of snake){ // check would be dead
+            if (segment[0] == x && segment[1] == y) check_0 = 0;
         }
-
         if (x < 0 || x >= size_x || y < 0 || y >= size_y){
             check_0 = 0;
         }
@@ -204,14 +200,9 @@ $(document).ready(function(){
             ) check_1 = 2;
 
 
-
-        for (var i = 0; i < snake.length; i++){ // check if snake would be dead (overrides apple)
-            if (i != head_index && i != (head_index + 1) % snake.length){
-                var segment = snake[i];
-                if (segment[0] == x && segment[1] == y) check_1 = 0;
-            }
+        for (var segment of snake){ // check would be dead
+            if (segment[0] == x && segment[1] == y) check_1 = 0;
         }
-
         if (x < 0 || x >= size_x || y < 0 || y >= size_y){
             check_1 = 0;
         }
