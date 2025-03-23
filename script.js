@@ -1,12 +1,9 @@
 
-
-console.log("hello  (:");
-
 $(document).ready(function(){
 
     var dir = 2;
 
-
+    /*
     document.onkeydown = function(e){
         if (
             e.keyCode <=40 &&
@@ -17,6 +14,7 @@ $(document).ready(function(){
             !(e.keyCode == 40 && dir == 1)
         ) dir = e.keyCode - 37;
     }
+    */
 
     const canvas = document.querySelector("#canvas");
     const ctx = canvas.getContext("2d");
