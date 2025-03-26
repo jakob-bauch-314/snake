@@ -1,7 +1,7 @@
 
 :root{
     --grid-number: 32;
-    --container-size: min(100vw, 100vh);
+    --container-size: min(90vw, 90vh);
     --cell-size: calc(var(--container-size) / (var(--grid-number) + 2));
     --canvas-size: calc(var(--cell-size) * var(--grid-number));
 }
@@ -36,6 +36,7 @@ html, body{
 }
 
 #container{
+    top: calc((100vh - var(--container-size)) / 2);
     position: relative;
     background-image: url("../images/border.png");
     background-size: calc(1 * var(--cell-size));
