@@ -1,16 +1,17 @@
-# Snake AI Project 🐍
+# Snake AI 🐍
 
-This project features an AI-controlled snake that can navigate the game grid efficiently and win every time by systematically covering the entire space without collisions. Below is an explanation of how the AI logic works.
+The best snake ai algorithm you will ever see in your life.
+the snake will cover the entire space like a madman until there are no apples left.
 
 ## How the Snake AI Works
 
 ### Core Logic
-The AI uses a deterministic algorithm that combines **path safety checks** and **apple proximity optimization** to ensure the snake never collides with itself or the walls while moving toward the apple. Here's the breakdown:
 
 1. **Direction Alternation**:
    - The snake alternates between turning left or right based on its current position. The direction is determined by the parity of `(x + y) % 2`, where `x` and `y` are the head's coordinates.
    - If the parity is `0`, the snake prioritizes a left turn (`(dir + 3) % 4`).
    - If the parity is `1`, it prioritizes a right turn (`(dir + 5) % 4`).
+   - This ensures that there is always a direct way from the snakes head to its tail, and when enough apples are collected, this will automatically determine an epicycle for the entire board.
 
 2. **Safety and Apple Proximity Checks**:
    - For both the prioritized turn direction (`dir_0`) and the straight direction (`dir_1`), the AI evaluates:
