@@ -22,8 +22,8 @@ $(document).ready(function(){
     const cell_size = 32;
     const line_width = 0.75;
 
-    const size_x = 50;
-    const size_y = 24;
+    const size_x = 32;
+    const size_y = 32;
 
     canvas.height = size_y * cell_size;
     canvas.width = size_x * cell_size;
