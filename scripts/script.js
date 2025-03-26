@@ -16,6 +16,10 @@ $(document).ready(function(){
     }
     */
 
+    const snake_color_alive = `rgb(200,5,100)`;
+    const snake_color_dead = `rgb(255,0,0)`;
+    const apple_color = `rgb(20,250,20)`;
+
     const canvas = document.querySelector("#canvas");
     const ctx = canvas.getContext("2d");
 
@@ -97,8 +101,8 @@ $(document).ready(function(){
 
         ctx.clearRect(0, 0, canvas.width, canvas.height); //clear canvas
 
-        if (alive) ctx.strokeStyle = "red"; //draw snake
-        else ctx.strokeStyle = "orange";
+        if (alive) ctx.strokeStyle = snake_color_alive; //draw snake
+        else ctx.strokeStyle = snake_color_dead;
 
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
@@ -113,7 +117,7 @@ $(document).ready(function(){
         ctx.stroke();
         ctx.closePath();
 
-        ctx.fillStyle = "green"; //draw apple
+        ctx.fillStyle = apple_color; //draw apple
 
         ctx.lineWidth = 1;
         ctx.beginPath();
